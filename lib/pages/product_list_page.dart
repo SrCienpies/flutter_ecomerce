@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_codigo3_ecomerce_api/api/api_services.dart';
 import 'package:flutter_codigo3_ecomerce_api/pages/product_detail_page.dart';
 import 'package:http/http.dart' as http;
 
@@ -10,159 +11,124 @@ class ProductListPage extends StatefulWidget {
 }
 
 class _ProductListPageState extends State<ProductListPage> {
-  List productList = [];
+
+  APIService apiService = new APIService();
+  List listProduct = [];
 
   @override
-  void initState() {
-    // TODO: implement initState
+  initState() {
     super.initState();
-    getProductList();
+    getData();
   }
 
-  getProductList() async {
-    String path = "http://192.168.1.61:8000/api/product/";
-    Uri _uri = Uri.parse(path);
-    http.Response response = await http.get(_uri);
-
-    if (response.statusCode == 200) {
-      productList = json.decode(response.body);
-      setState(() {});
-    }
+  getData(){
+    this.apiService.getProductsData().then((value) => listProduct = value);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(color: Color(0xFF626262)),
-          backgroundColor: Colors.white,
-          elevation: 0,
-          title: Text(
-            'Lista de productos',
-            style: TextStyle(
-              color: Color(0xFF626262),
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.white,
+        iconTheme: IconThemeData(color: Colors.black87),
+        title: Text(
+          "Lista de productos",
+          style: TextStyle(
+              color: Colors.black87,
+              fontWeight: FontWeight.w900,
+              fontFamily: 'Comfortaa-Bold',
+              fontSize: 16.0),
         ),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 12.0),
-          child: GridView.count(
-            crossAxisCount: 2,
-            mainAxisSpacing: 10.0,
-            crossAxisSpacing: 10.0,
-            childAspectRatio: 0.8,
-            children: productList.map<Widget>((item) {
-              return GestureDetector(
-                onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ProductDetailPage()));
-                },
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(20.0),
-                  child: Container(
-                    // height: double.infinity,
-                    // margin: EdgeInsets.symmetric(horizontal: 10.0),
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(item['image']),
-                        fit: BoxFit.cover,
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black45,
-                          spreadRadius: 0.5,
-                          blurRadius: 10.0,
-                          offset: Offset(0, 5),
-                        )
-                      ],
-                    ),
-                    child: Stack(
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.bottomCenter,
-                              end: Alignment.center,
-                              colors: [
-                                Colors.black.withOpacity(0.8),
-                                Colors.transparent
-                              ],
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.topRight,
-                          child: IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              Icons.more_vert,
-                              color: Colors.black,
-                            ),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      left: 12.0, bottom: 12.0),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        item['name'],
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16.0,
-                                            height: 1.0),
-                                      ),
-                                      SizedBox(
-                                        height: 7,
-                                      ),
-                                      Text(
-                                        'S/. ${item['price'].toString()}',
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500,
-                                          fontSize: 15.0,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                              IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.favorite,
-                                  color: Colors.white,
-                                ),
-                              )
-                            ],
-                          ),
-                        )
-                      ],
-                    ),
+      ),
+      body: GridView.count(
+        crossAxisCount: 2,
+        childAspectRatio: 0.85,
+        // crossAxisSpacing: 10,
+        children: listProduct
+            .map<Widget>(
+              (e) => GestureDetector(
+            onTap: () {
+              print(e);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProductDetailPage(
+                    sneaker: e,
                   ),
                 ),
               );
-            }).toList(),
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Column(
+                children: [
+                  Container(
+                    height: 160.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20.0),
+                      color: Colors.transparent,
+                      image: DecorationImage(
+                        fit: BoxFit.cover,
+                        image: NetworkImage(e["image"]),
+                      ),
+                    ),
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          right: 10.0,
+                          top: 10.0,
+                          child: Icon(
+                            Icons.more_vert,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                e["name"].toString().toUpperCase(),
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xff121212),
+                                    fontSize: 13.0,
+                                    height: 1.2),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              SizedBox(
+                                height: 6,
+                              ),
+                              Text(
+                                "S/ ${e["price"]}",
+                                style: TextStyle(
+                                    fontWeight: FontWeight.normal,
+                                    fontSize: 12.0,
+                                    color: Color(0xff121212)),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Icon(Icons.favorite_border)
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ));
+        )
+            .toList(),
+      ),
+    );
   }
 }

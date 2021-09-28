@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_codigo3_ecomerce_api/api/api_services.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -18,37 +19,24 @@ class _HomePageState extends State<HomePage> {
 
   List bannerList = [];
   List brandList = [];
+  APIService apiService = new APIService();
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    getBannerData();
-    getBrandData();
+    getData();
   }
 
-  getBannerData() async{
-    String path = "http://192.168.1.61:8000/api/banner/";
-    Uri _uri = Uri.parse(path);
-    http.Response response = await http.get(_uri);
-    if (response.statusCode == 200) {
-      bannerList = json.decode(response.body);
+  getData(){
+    apiService.getBannerData().then((value) {
+      bannerList = value;
       setState(() {});
-    }
-  }
+    });
 
-  getBrandData()async{
-    String path = "http://192.168.1.61:8000/api/brand/";
-    Uri _uri = Uri.parse(path);
-    http.Response response = await http.get(_uri);
-
-    print(response.statusCode);
-    if(response.statusCode == 200){
-      brandList = json.decode(response.body);
-      print(brandList.length);
-      print(brandList[0]['image']);
+    apiService.getBrandsData().then((value){
+      brandList = value;
       setState(() {});
-    }
+    });
   }
 
 
