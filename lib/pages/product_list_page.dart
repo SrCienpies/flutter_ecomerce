@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_codigo3_ecomerce_api/api/api_services.dart';
+import 'package:flutter_codigo3_ecomerce_api/models/product_model.dart';
 import 'package:flutter_codigo3_ecomerce_api/pages/product_detail_page.dart';
 import 'package:http/http.dart' as http;
 
@@ -13,7 +14,7 @@ class ProductListPage extends StatefulWidget {
 class _ProductListPageState extends State<ProductListPage> {
 
   APIService apiService = new APIService();
-  List listProduct = [];
+  List<Product> listProduct = [];
 
   @override
   initState() {
@@ -22,7 +23,10 @@ class _ProductListPageState extends State<ProductListPage> {
   }
 
   getData(){
-    this.apiService.getProductsData().then((value) => listProduct = value);
+    this.apiService.getProductsData().then((value){
+      listProduct = value;
+      setState(() {});
+    });
   }
 
   @override
@@ -44,7 +48,7 @@ class _ProductListPageState extends State<ProductListPage> {
       ),
       body: GridView.count(
         crossAxisCount: 2,
-        childAspectRatio: 0.85,
+        childAspectRatio: 0.75,
         // crossAxisSpacing: 10,
         children: listProduct
             .map<Widget>(
@@ -55,7 +59,7 @@ class _ProductListPageState extends State<ProductListPage> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => ProductDetailPage(
-                    sneaker: e,
+                    sneaker:  e,
                   ),
                 ),
               );
@@ -71,7 +75,7 @@ class _ProductListPageState extends State<ProductListPage> {
                       color: Colors.transparent,
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: NetworkImage(e["image"]),
+                        image: NetworkImage(e.image),
                       ),
                     ),
                     child: Stack(
@@ -96,7 +100,7 @@ class _ProductListPageState extends State<ProductListPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                e["name"].toString().toUpperCase(),
+                                e.name.toString().toUpperCase(),
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Color(0xff121212),
@@ -109,7 +113,7 @@ class _ProductListPageState extends State<ProductListPage> {
                                 height: 6,
                               ),
                               Text(
-                                "S/ ${e["price"]}",
+                                "S/ ${e.price}",
                                 style: TextStyle(
                                     fontWeight: FontWeight.normal,
                                     fontSize: 12.0,

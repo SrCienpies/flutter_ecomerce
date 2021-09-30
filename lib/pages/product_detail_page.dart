@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
-import 'car_page.dart';
+import 'package:flutter_codigo3_ecomerce_api/models/product_model.dart';
+import 'package:flutter_codigo3_ecomerce_api/pages/car_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
 
-  Map sneaker;
+  Product sneaker;
   ProductDetailPage({required this.sneaker});
 
   @override
@@ -52,7 +52,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     ),
                     image: DecorationImage(
                       fit: BoxFit.cover,
-                      image: NetworkImage(widget.sneaker["image"]),
+                      image: NetworkImage(widget.sneaker.image),
                     ),
                   ),
                 ),
@@ -64,7 +64,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0),
                       child: Text(
-                        widget.sneaker["brand"].toString().toUpperCase(),
+                        widget.sneaker.brand.toString().toUpperCase(),
                         style: TextStyle(color: Colors.black54, fontSize: 14.0),
                       ),
                     )
@@ -75,7 +75,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0),
                       child: Text(
-                        "${widget.sneaker["name"].toString().toUpperCase()} ",
+                        "${widget.sneaker.name.toString().toUpperCase()} ",
                         style: TextStyle(
                             color: Colors.black54,
                             fontSize: 16.0,
@@ -98,7 +98,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       child: Text(
-                        "S/ ${widget.sneaker["price"].toString()}",
+                        "S/ ${widget.sneaker.price.toString()}",
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ),
@@ -189,7 +189,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                       child: Padding(
                         padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                         child: Text(
-                          widget.sneaker["description"],
+                          widget.sneaker.description,
                           style:
                           TextStyle(color: Colors.black54, fontSize: 14.0),
                         ),
@@ -211,8 +211,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
               child: ElevatedButton.icon(
                 onPressed: _quantity != 0 ? () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context)=>CarPage()));
-                }: (){},
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CartPage()));
+                } : () {},
                 icon: Icon(Icons.add_shopping_cart_rounded),
                 label: Text("Agregar al carrito"),
                 style: ElevatedButton.styleFrom(

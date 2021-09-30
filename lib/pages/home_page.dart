@@ -4,6 +4,8 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_codigo3_ecomerce_api/api/api_services.dart';
+import 'package:flutter_codigo3_ecomerce_api/models/banner_model.dart';
+import 'package:flutter_codigo3_ecomerce_api/pages/product_list_page.dart';
 import 'package:http/http.dart' as http;
 
 
@@ -17,9 +19,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
 
-  List bannerList = [];
+  List<MyBanner> bannerList = [];
   List brandList = [];
   APIService apiService = new APIService();
+  List<String> lista = ['uno', 'dos', 'tres'];
 
   @override
   void initState() {
@@ -128,31 +131,39 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Column(
                           children: [
-                            Container(
-                              padding: EdgeInsets.all(10.0),
-                              height: 80,
-                              width: 80,
-                              decoration: BoxDecoration(
-                                color: Colors.greenAccent,
-                                borderRadius: BorderRadius.circular(20),
-                                gradient: LinearGradient(
-                                  colors: [
-                                    Color(0xffFF7D02),
-                                    Color(0xffFFCA53),
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: Color(0xffC197FB).withOpacity(0.6),
-                                    blurRadius: 7,
-                                    offset: Offset(0, 4),
+                            GestureDetector(
+                              onTap: (){
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => ProductListPage(),),);
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(10.0),
+                                height: 80,
+                                width: 80,
+                                decoration: BoxDecoration(
+                                  color: Colors.greenAccent,
+                                  borderRadius: BorderRadius.circular(20),
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Color(0xffFF7D02),
+                                      Color(0xffFFCA53),
+                                    ],
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
                                   ),
-                                ],
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Color(0xffC197FB).withOpacity(0.6),
+                                      blurRadius: 7,
+                                      offset: Offset(0, 4),
+                                    ),
+                                  ],
+                                ),
+                                child:
+                                    Image.asset('assets/images/shoes_icon.png'),
                               ),
-                              child:
-                                  Image.asset('assets/images/shoes_icon.png'),
                             ),
                             SizedBox(
                               height: 10.0,
@@ -446,7 +457,7 @@ class _HomePageState extends State<HomePage> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(22.0),
                             image: DecorationImage(
-                                image: NetworkImage(item['image']), fit: BoxFit.cover),
+                                image: NetworkImage(item.image), fit: BoxFit.cover),
                           ),
                         );
                       }).toList(),
