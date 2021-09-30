@@ -44,6 +44,13 @@ class DBManager {
     return res;
   }
 
+  Future<List<Product>> getAllProducts() async{
+    final db = await database;
+    final res = await db!.query("Products");
+    List<Product> listProducts = res.isNotEmpty ? res.map<Product>((item)=>Product.fromJson(item)).toList() : [];
+    return listProducts;
+  }
+
   // Future<int> getProductId(int id) async {
   //   final db = await database;
   // }
