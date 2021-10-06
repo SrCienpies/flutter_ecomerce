@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_codigo3_ecomerce_api/db/db_manager.dart';
 import 'package:flutter_codigo3_ecomerce_api/models/product_model.dart';
 import 'package:flutter_codigo3_ecomerce_api/pages/car_page.dart';
 
 class ProductDetailPage extends StatefulWidget {
-
   Product sneaker;
   ProductDetailPage({required this.sneaker});
 
@@ -110,9 +110,9 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                             onTap: _quantity == 0
                                 ? () {}
                                 : () {
-                              _quantity--;
-                              setState(() {});
-                            },
+                                    _quantity--;
+                                    setState(() {});
+                                  },
                             child: Container(
                               height: 40,
                               width: 40,
@@ -120,8 +120,8 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                                 color: _quantity == 0
                                     ? Colors.black38
                                     : Color(
-                                  0xff121212,
-                                ),
+                                        0xff121212,
+                                      ),
                                 borderRadius: BorderRadius.circular(14.0),
                               ),
                               child: Icon(
@@ -191,7 +191,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         child: Text(
                           widget.sneaker.description,
                           style:
-                          TextStyle(color: Colors.black54, fontSize: 14.0),
+                              TextStyle(color: Colors.black54, fontSize: 14.0),
                         ),
                       ),
                     )
@@ -210,10 +210,33 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
               width: double.infinity,
               margin: EdgeInsets.symmetric(vertical: 4.0, horizontal: 20.0),
               child: ElevatedButton.icon(
-                onPressed: _quantity != 0 ? () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => CartPage()));
-                } : () {},
+                onPressed: _quantity != 0
+                    ? () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CartPage()));
+                      }
+                    : () {
+                        print(widget.sneaker.toJson());
+                        widget.sneaker.quantity = _quantity;
+                        DBManager.db.insertProduct(widget.sneaker).then(
+                              (value) => showDialog(
+                                context: context,
+                                builder: (_) => AlertDialog(
+                                  title: Text('Añadido con éxito'),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                      child: Text('Aceptar'),
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                      },
                 icon: Icon(Icons.add_shopping_cart_rounded),
                 label: Text("Agregar al carrito"),
                 style: ElevatedButton.styleFrom(

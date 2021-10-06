@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_codigo3_ecomerce_api/api/api_services.dart';
 import 'package:flutter_codigo3_ecomerce_api/models/banner_model.dart';
+import 'package:flutter_codigo3_ecomerce_api/pages/car_page.dart';
 import 'package:flutter_codigo3_ecomerce_api/pages/product_list_page.dart';
 import 'package:http/http.dart' as http;
 
@@ -61,7 +62,9 @@ class _HomePageState extends State<HomePage> {
         ),
         actions: [
           IconButton(onPressed: (){}, icon: Icon(Icons.person),),
-          IconButton(onPressed: (){}, icon: Icon(Icons.shopping_cart),),
+          IconButton(onPressed: (){
+            Navigator.push(context, MaterialPageRoute(builder: (_) => CartPage(),));
+          }, icon: Icon(Icons.shopping_cart),),
         ],
       ),
       body: SafeArea(

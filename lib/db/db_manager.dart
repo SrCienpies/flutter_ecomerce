@@ -38,9 +38,12 @@ class DBManager {
     );
   }
 
-  insertProduct(Product product) async{
+  Future<int> insertProduct(Product productModel) async {
     final db = await database;
-    final res = await db!.insert("Products", product.toJson());
+    // int res = await db!.insert("Product", productModel.toJson());
+    int res = await db!.rawInsert(
+        "INSERT INTO Products(id, brand, name, price, quantity, image) VALUES (${productModel.id}, '${productModel.brand}', '${productModel.name}', ${productModel.price}, ${productModel.quantity}, '${productModel.image}')");
+    print(res);
     return res;
   }
 
